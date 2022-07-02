@@ -1,3 +1,6 @@
+from re import I
+
+
 def lambda_curry2(func):
     """
     Returns a Curried version of a two-argument function FUNC.
@@ -133,31 +136,19 @@ def cycle(f1, f2, f3):
     """
     "*** YOUR CODE HERE ***"
     def helper(n):
-        i = 0
-        count = 0
-        while count <= n:
-            if i == 0:
-                def num(x):
-                    return x
-                i = i + 1
-                count = count +1
-            elif i == 1:
-                def num(x):
-                    return f1(x)
-                i = i + 1
-                count = count +1
-            elif i == 2:
-                def num(x):
-                    return f2(f1(x))
-                i = i + 1
-                count = count +1
-            elif i == 3:
-                def num(x):
-                    return f3(f2(f1(x)))
-                i = i + 1
-                count = count +1
-            else:
-                i = i - 3
-        return num
-    return helper
+        def helper2(i):
+            count = 0
+            while count <n:
+                if count%3 == 0:
+                    i = f1(i)
+                elif count%3 ==1:
+                    i = f2(i)
+                else:
+                    i = f3(i)
+                count +=1
+            return i
+        return helper2
+    return helper 
+ 
+                
 
