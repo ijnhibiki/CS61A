@@ -260,6 +260,11 @@ def hidden_kittens(typed, reference, limit):
     """
     # BEGIN PROBLEM 7
     "*** YOUR CODE HERE ***"
+    if len(typed) == len(reference):
+        if typed == reference:
+            return 1
+        else:
+            return 0
     if typed[0] == reference[0]:
         return "hi"
     else:
@@ -306,6 +311,21 @@ def report_progress(typed, prompt, user_id, upload):
     """
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    num = len(prompt)
+    index = 0
+    right = 0
+    while index+1 <= len(typed):
+        if typed[index] == prompt[index]:
+            right +=1
+            index +=1
+        else:
+            progress = right / num
+            upload({'id': user_id, 'progress': progress})
+            return progress
+    progress = right / num
+    upload({'id': user_id, 'progress': progress})
+    return progress
+            
     # END PROBLEM 8
 
 
@@ -328,6 +348,16 @@ def time_per_word(words, times_per_player):
     """
     # BEGIN PROBLEM 9
     "*** YOUR CODE HERE ***"
+    list =[]
+    list_2 = []
+    for i in times_per_player:
+        for j in range(len(i)):
+            if j > 0:
+                list.append(i[j]-i[j-1])
+        list_2.append(list)
+        list = []
+    return {'words': words, 'times': list_2}
+
     # END PROBLEM 9
 
 
