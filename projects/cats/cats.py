@@ -2,6 +2,8 @@
 
 from ast import Return
 from cgitb import reset
+from operator import index
+from re import A
 from utils import lower, split, remove_punctuation, lines_from_file
 from ucb import main, interact, trace
 from datetime import datetime
@@ -171,6 +173,30 @@ def autocorrect(typed_word, word_list, diff_function, limit):
     """
     # BEGIN PROBLEM 5
     "*** YOUR CODE HERE ***"
+    if typed_word in word_list:
+        return typed_word
+    else:
+        w = ''
+        pre = False
+        num = 0
+        for i in word_list:
+            if pre == False:       
+                if diff_function(typed_word, i, limit) <= limit:
+                    w = i
+                    pre = True
+                    num = diff_function(typed_word, i, limit)
+
+            else:
+                if diff_function(typed_word, i, limit) <= limit and diff_function(typed_word, i, limit) < num:
+                    w = i
+                    num = diff_function(typed_word, i, limit)
+        if w == '':
+            return typed_word
+        return w
+                
+
+
+
     # END PROBLEM 5
 
 
@@ -197,7 +223,20 @@ def feline_fixes(typed, reference, limit):
     5
     """
     # BEGIN PROBLEM 6
-    assert False, 'Remove this line'
+    if typed == reference:
+        return 0
+    elif limit == 0:
+        return 1
+    elif typed == '':
+        return len(reference)
+    elif reference =='':
+        return len(typed)
+    elif typed[0] != reference[0]:
+        total =1
+        limit -=1
+    else:
+        total = 0
+    return total + feline_fixes(typed[1:], reference[1:], limit)
     # END PROBLEM 6
 
 
@@ -221,6 +260,10 @@ def hidden_kittens(typed, reference, limit):
     """
     # BEGIN PROBLEM 7
     "*** YOUR CODE HERE ***"
+    if typed[0] == reference[0]:
+        return "hi"
+    else:
+        return hidden_kittens(typed[1:], reference, limit)
     # END PROBLEM 7
 
 
