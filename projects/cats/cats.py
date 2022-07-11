@@ -5,6 +5,7 @@ from cgitb import reset
 from operator import index
 from os import times
 from re import A
+import xxlimited
 from utils import lower, split, remove_punctuation, lines_from_file
 from ucb import main, interact, trace
 from datetime import datetime
@@ -261,15 +262,40 @@ def hidden_kittens(typed, reference, limit):
     """
     # BEGIN PROBLEM 7
     "*** YOUR CODE HERE ***"
-    if len(typed) == len(reference):
-        if typed == reference:
-            return 1
+    def helper(typed, reference):
+        if len(typed) < len(reference):
+            return False
+        if len(reference) == 0:
+                return True
+        if len(typed) == len(reference):
+            if typed == reference:
+                return True
+            else:
+                return False
+        if typed[0] == reference[0]:
+            return helper(typed[1:], reference[1:])
         else:
-            return 0
-    if typed[0] == reference[0]:
-        return "hi"
+            return helper(typed[1:], reference)
+    if helper(typed, reference):
+        def helper_2(typed, reference, limit):
+            if limit == 0:
+                return 1
+            if len(reference) == 0:
+                limit -=1
+                return 1
+            if len(typed) == len(reference):
+                if typed == reference:
+                    limit -=1
+                    return 1
+                else:
+                    return 0
+            if typed[0] == reference[0]:
+                return helper_2(typed[1:], reference[1:], limit) + helper_2(typed[1:], reference, limit)
+            else:
+                return helper_2(typed[1:], reference, limit)
     else:
-        return hidden_kittens(typed[1:], reference, limit)
+        return limit +1
+    return helper_2(typed, reference, limit)
     # END PROBLEM 7
 
 
