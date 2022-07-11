@@ -145,6 +145,10 @@ def couple(s, t):
     """
     assert len(s) == len(t)
     "*** YOUR CODE HERE ***"
+    new_list = []
+    for i in range(len(s)):
+        new_list.append([s[i], t[i]])
+    return new_list
 
 
 def change_abstraction(change):
