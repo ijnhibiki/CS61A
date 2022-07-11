@@ -3,6 +3,7 @@
 from ast import Return
 from cgitb import reset
 from operator import index
+from os import times
 from re import A
 from utils import lower, split, remove_punctuation, lines_from_file
 from ucb import main, interact, trace
@@ -380,7 +381,17 @@ def fastest_words(match):
     word_indices = range(len(match["words"]))    # contains an *index* for each word
     # BEGIN PROBLEM 10
     "*** YOUR CODE HERE ***"
-    
+    new_list =[]
+    person = 0
+    for k in player_indices:
+        new_list.append([])
+    for i in word_indices:
+        for j in player_indices:
+            if j+1 != len(match["times"]) and match["times"][j +1][i] < match["times"][person][i]:
+                person = j + 1
+        new_list[person].append(match["words"][i])
+        person = 0
+    return new_list
     # END PROBLEM 10
 
 
