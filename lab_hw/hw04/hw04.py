@@ -55,10 +55,12 @@ def remove_odd_indices(lst, odd):
     "*** YOUR CODE HERE ***"
     if len(lst) == 0:
         return []
-    elif lst[0] % 2 == odd:
-        return [lst[0]] + remove_odd_indices(lst[1:], odd)
+    elif odd == True:
+        return [lst[0]] + remove_odd_indices(lst[2:], odd)
+    elif odd == False and len(lst) > 1:
+        return [lst[1]] + remove_odd_indices(lst[2:], odd)
     else:
-        return remove_odd_indices(lst[1:], odd)
+        return []
 
 
 
@@ -86,8 +88,19 @@ class SmartFridge:
 
     def add_item(self, item, quantity):
         "*** YOUR CODE HERE ***"
+        if item not in self.items:
+            self.items[item] = 0
+        self.items[item] += quantity
+        return f'I now have {self.items[item]} {item}'
 
     def use_item(self, item, quantity):
+        if self.items[item] <= quantity:
+            self.items[item] = 0
+            return f'Oh no, we need more {item}!'
+        else:
+            self.items[item] -= quantity
+            return f'I have {self.items[item]} {item} left'
+
         "*** YOUR CODE HERE ***"
 
 
@@ -129,3 +142,33 @@ class VendingMachine:
     'Here is your soda.'
     """
     "*** YOUR CODE HERE ***"
+    def __init__(self, item, price):
+        self.item = item
+        self.price = price
+        self.stock = 0
+        self.money = 0
+        self.change = 0
+    def vend(self):
+        if self.stock == 0:
+            return f'Nothing left to vend. Please restock.'
+        if self.money < self.price:
+            return f'Please update your balance with ${self.price - self.money} more funds.'
+        else:
+            self.change = self.money - self.price
+            if self.change == 0:
+                self.money = 0
+                self.stock -= 1
+                return f'Here is your {self.item}.'
+            else:
+                self.money = 0
+                self.stock -= 1
+                return f'Here is your {self.item} and ${self.change} change.'
+    def add_funds(self, money):
+        if self.stock == 0:
+            return f'Nothing left to vend. Please restock. Here is your ${money}.'
+        else:
+            self.money += money
+            return f'Current balance: ${self.money}'
+    def restock(self, amount):
+        self.stock += amount
+        return f'Current {self.item} stock: {self.stock}'
