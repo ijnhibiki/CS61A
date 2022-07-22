@@ -3,7 +3,6 @@
 from email.base64mime import header_length
 from os import remove
 import random
-
 from numpy import double, place
 from ucb import main, interact, trace
 from collections import OrderedDict
@@ -112,7 +111,7 @@ class Ant(Insect):
     is_container = False
     # ADD CLASS ATTRIBUTES HERE
     is_doubled = False
-
+    blocks_path = True
     def __init__(self, health=1):
         """Create an Insect with a HEALTH quantity."""
         super().__init__(health)
@@ -544,7 +543,13 @@ class Bee(Insect):
         """Return True if this Bee cannot advance to the next Place."""
         # Special handling for NinjaAnt
         # BEGIN Problem Optional 1
-        return self.place.ant is not None
+        if not self.place.ant:
+            return False
+        elif self.place.ant and not self.place.ant.blocks_path:
+            return False
+        else:
+            return True
+        '''return not self.place.ant is NinjaAnt and self.place.ant is not None'''
         # END Problem Optional 1
 
     def action(self, gamestate):
@@ -643,14 +648,19 @@ class NinjaAnt(Ant):
     name = 'Ninja'
     damage = 1
     food_cost = 5
+    blocks_path = False
     # OVERRIDE CLASS ATTRIBUTES HERE
+
     # BEGIN Problem Optional 1
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     # END Problem Optional 1
 
     def action(self, gamestate):
         # BEGIN Problem Optional 1
         "*** YOUR CODE HERE ***"
+        curr = self.place.bees[:]
+        for bees in curr:
+            bees.reduce_health(self.damage)
         # END Problem Optional 1
 
 ############
@@ -696,7 +706,8 @@ class LaserAnt(ThrowerAnt):
     food_cost = 10
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem Optional 2
-    implemented = False   # Change to True to view in the GUI
+    damage = 2
+    implemented = True   # Change to True to view in the GUI
     # END Problem Optional 2
 
     def __init__(self, health=1):
@@ -705,12 +716,28 @@ class LaserAnt(ThrowerAnt):
 
     def insects_in_front(self):
         # BEGIN Problem Optional 2
-        return {}
+        insects_front = {}
+        distance = 0
+        place = self.place
+        while not place.is_hive:
+            if place.ant is not LaserAnt:
+                insects_front[place.ant] = distance
+                for bee in place.bees:
+                    insects_front[bee] = distance
+            distance += 1
+            place = place.entrance
+        del insects_front[None]
+        return insects_front
         # END Problem Optional 2
 
     def calculate_damage(self, distance):
         # BEGIN Problem Optional 2
-        return 0
+        new_disatnce = 0
+        shot = self.insects_shot - 1
+        if distance != 0:
+            new_disatnce = distance
+        damage = self.damage - (new_disatnce * 0.25) - (shot * 0.0625)
+        return damage
         # END Problem Optional 2
 
     def action(self, gamestate):
