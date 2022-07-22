@@ -238,6 +238,7 @@ class ThrowerAnt(Ant):
 
     def action(self, gamestate):
         """Throw a leaf at the nearest Bee in range."""
+        self.gamestate = gamestate
         self.throw_at(self.nearest_bee())
 
 
@@ -524,7 +525,12 @@ class Bee(Insect):
     name = 'Bee'
     damage = 1
     # OVERRIDE CLASS ATTRIBUTES HERE
+    is_slowed = False
+    slowed = 0
     is_waterproof = True
+    is_scared = False
+    scared = 0
+    scared_timer = False
     def sting(self, ant):
         """Attack an ANT, reducing its health by 1."""
         ant.reduce_health(self.damage)
@@ -550,10 +556,45 @@ class Bee(Insect):
         destination = self.place.exit
 
         # Extra credit: Special handling for bee direction
-        if self.blocked():
+        if self.is_scared and not self.blocked():
+            if self.is_slowed and gamestate.time % 2 == 1:
+                self.slowed -= 1
+                place = self.place
+                self.move_to(place)
+                if self.slowed == 0:
+                    self.is_slowed = False
+            elif self.is_slowed and gamestate.time % 2 == 0:
+                self.slowed -= 1
+                place = self.place.entrance
+                self.move_to(place)
+                self.scared -= 1
+                if self.scared == 0:
+                    self.is_scared = False
+                if self.slowed == 0:
+                    self.is_slowed = False
+            elif not self.is_slowed:
+                place = self.place.entrance
+                self.move_to(place)
+                self.scared -= 1
+                if self.scared == 0:
+                    self.is_scared = False
+        elif self.is_slowed:
+            if gamestate.time % 2 == 1:
+                self.slowed -= 1
+                place = self.place
+                self.move_to(place)
+                if self.slowed == 0:
+                    self.is_slowed = False
+            else:
+                self.slowed -= 1
+                self.move_to(destination)
+                if self.slowed == 0:
+                    self.is_slowed = False
+        elif self.blocked():
             self.sting(self.place.ant)
         elif self.health > 0 and destination is not None:
             self.move_to(destination)
+
 
     def add_to(self, place):
         place.bees.append(self)
@@ -567,6 +608,12 @@ class Bee(Insect):
         """Slow the bee for a further LENGTH turns."""
         # BEGIN Problem EC
         "*** YOUR CODE HERE ***"
+        if self.is_slowed:
+            self.slowed +=length
+        else:
+            self.is_slowed = True
+            self.slowed = length
+
         # END Problem EC
 
     def scare(self, length):
@@ -576,6 +623,11 @@ class Bee(Insect):
         """
         # BEGIN Problem EC
         "*** YOUR CODE HERE ***"
+        if not self.scared_timer:    
+            self.is_scared = True
+            self.scared = length
+            self.scared_timer = True
+
         # END Problem EC
 
 
@@ -612,7 +664,7 @@ class SlowThrower(ThrowerAnt):
     name = 'Slow'
     food_cost = 4
     # BEGIN Problem EC
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     # END Problem EC
 
     def throw_at(self, target):
@@ -626,12 +678,14 @@ class ScaryThrower(ThrowerAnt):
     name = 'Scary'
     food_cost = 6
     # BEGIN Problem EC
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     # END Problem EC
 
     def throw_at(self, target):
         # BEGIN Problem EC
         "*** YOUR CODE HERE ***"
+        if target:
+            target.scare(2)
         # END Problem EC
 
 
