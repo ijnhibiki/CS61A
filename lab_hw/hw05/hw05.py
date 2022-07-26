@@ -1,3 +1,6 @@
+from numpy import empty
+
+
 def add_d_leaves(t, v):
     """Add d leaves containing v to each node at every depth d.
 
@@ -148,12 +151,12 @@ def deep_map(f, link):
     """
     "*** YOUR CODE HERE ***"
     if link is Link.empty:
-        return link
+      return Link.empty
+    elif isinstance(link.first, Link):
+      return Link(deep_map(f, link.first), deep_map(f, link.rest))
     else:
-        if isinstance(link.first, Link):
-            return Link(deep_map(f, link.first), deep_map(f, link.rest))
-        else:
-            return Link(f(link.first), deep_map(f, link.rest))
+      return Link(f(link.first), deep_map(f, link.rest))
+
 
 class Tree:
     """
