@@ -4,6 +4,7 @@
   (cond 
         ((= n 0) result)
         ((> n 0) (helper x (- n 1) (append result `(,x)))))
+        ;(append result (cons x nil) works as well
   ; END
   )
   (helper x n ())
