@@ -1,0 +1,13 @@
+(define (pop lst index)
+    (define (helper lst index result current)
+        (cond ((null? lst) result)
+              ((= index current) (helper (cdr lst) index result (+ 1 current)))
+              (else (helper (cdr lst) index (append result (list (car lst))) (+ 1 current)))))
+(helper lst index () 0)    )
+
+;scm> (pop '(1 2 3 4) 2))
+;(1 2 4)
+;scm> (pop '(1 3 5) 2)
+;(1 3)
+;scm> (pop nil 8)
+;()
