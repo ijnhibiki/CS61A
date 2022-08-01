@@ -15,8 +15,5 @@
 (define (concatenate s) (define (helper s result)
                         (cond ((null? s) result)
                             (else (helper (cdr s)(append result (car s)))))
-
 )
-
-
 (helper s ()))
