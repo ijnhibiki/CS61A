@@ -49,4 +49,4 @@ def calculator_ops(calc_str):
     >>> calculator_ops("+ 3 23")
     False
     """
-    return bool(re.search("\(\[*/+-]s(\d+|())\s(\d+|())\)", calc_str))
+    return bool(re.search("\([*/+-]\s(\d+|())\s(\d+|())\)", calc_str))
