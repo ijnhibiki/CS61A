@@ -19,5 +19,5 @@ SELECT name FROM pizzas WHERE open < 13 ORDER BY name DESC;
 
 -- Two meals at the same place
 CREATE TABLE double AS
-SELECT a.meal, b.meal, name FROM meals AS a, meals AS b, pizzas WHERE b.time - a.time > 6 AND open <= a.time and a.time <= close and open <= b.time and b.time <= close;
+SELECT a.meal, b.meal, name FROM meals AS a, meals AS b, pizzas WHERE b.time - a.time > 6 AND open <= a.time and b.time <= close;
 

@@ -168,8 +168,8 @@ def address_oneline(text):
     False
     """
     block_number = r'\d{3,5}'
-    cardinal_dir = r'(?:[NSEA] )?'  # whitespace is important!
-    street = r'(?:[A-Z][A-Za-z]+ )+'
+    cardinal_dir = r'(?:[NSEW] )?'  # whitespace is important! ([NSEW]\s)?
+    street = r'(?:[A-Z][A-Za-z]+ )+' #([A-Z][A-Za-z]+ )
     type_abbr = r'(?:[A-Z][a-z]{1,4}\b)'
     street_name = f"{cardinal_dir}{street}{type_abbr}"
     return bool(re.search(f"{block_number} {street_name}", text))
