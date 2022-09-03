@@ -1,2 +1,2 @@
 # CS61A
-The repo is for summer 20222 CS61A @ UC Berkeley
+The repo is for summer 2022 CS61A @ UC Berkeley
